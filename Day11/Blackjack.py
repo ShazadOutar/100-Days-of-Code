@@ -30,6 +30,7 @@
 
 import random
 from art import logo
+from replit import clear
 
 cards = [11, 2, 3, 4]  #, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 # create the user and computer hands
@@ -58,7 +59,7 @@ def find_sum(hand):
     sum = 0
     for card in hand:
         sum += card
-    print(f"Sum in has_blackjack is {sum}")
+    #print(f"Sum in has_blackjack is {sum}")
     return sum
 
 
@@ -104,16 +105,23 @@ def give_blackjack(hand):
 
 
 def black_jack_game():
-    print(logo)
+    #print(logo)
     #deal 2 cards to both players
     for i in range(2):
         deal_card(user_cards, cards)
         deal_card(computer_cards, cards)
     keep_playing = True
     while keep_playing:
+        #first check if anyone is already over 21
+        if over_21(user_cards):
+                print("You went over 21, you lose")
+                return
+        if over_21(computer_cards):
+            print("computer went over 21, you win")
+            return
         #give_blackjack()
-        print(user_cards)
-        print(computer_cards)
+        print(f"User's cards are {user_cards} with a score of {find_sum(user_cards)}")
+        print(f"Computer's cards are {computer_cards} with a score of {find_sum(computer_cards)}")
         #check if the either has blackjack
         #if either does, the game ends
         #the dealer wins if they both have it so dealer gets checked first
@@ -141,31 +149,40 @@ def black_jack_game():
                 if has_blackjack(computer_cards):
                     print("Computer has blackjack, you lose")
                     return
-
+    
             if over_21(user_cards):
                 print("You went over 21, you lose")
                 return
             if over_21(computer_cards):
                 print("computer went over 21, you win")
                 return
-
-            #at this point the dealer has between 17 and 20 points
+            print(f"User's cards are {user_cards} with a score of {find_sum(user_cards)}")
+            print(f"Computer's cards are {computer_cards} with a score of {find_sum(computer_cards)}")
+            #at this point the dealer and player have between 17 and 20 points
             player_score = find_sum(user_cards)
             computer_score = find_sum(computer_cards)
-            print(f"Player score is {player_score} and computer score is {computer_score}")
-            #compare the two players scores to see who wins
             if player_score > computer_score:
-                print("Player has a higher score")
-                return
-            elif (player_score == computer_score):
-                print("It's a draw : ()")
-                return
+              print(f"Player wins with a score of {player_score}")
+              return
+            elif player_score == computer_score:
+              print(f"It's a draw with a score of {player_score}")
+              return
             else:
-                print("Computer wins")
-                return
+              print(f"Computer wins with a score of {computer_score}")
+              return
 
 
-      
-
-
-black_jack_game()
+# black_jack_game()
+#keeping restarting the game until the user wants to quit
+#choice = "e"
+#while choice != "e":
+choice = "y"
+while choice == "y":
+  #clear the screen
+  clear()
+  #do one round of the game
+  black_jack_game()
+  #clear both players hands
+  computer_cards.clear()
+  user_cards.clear()
+  choice = input("Would you like to start a new game, press 'y' to continue, press 'n' to exit\n").lower()
