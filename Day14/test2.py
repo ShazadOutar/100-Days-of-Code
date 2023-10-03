@@ -10,7 +10,7 @@ Steps:
 6b. If the guess is right, increase the score by 1 and loop back from step 1
 """
 
-import art
+import art 
 from game_data import data
 from random import randint
 
@@ -40,7 +40,7 @@ def get_follower_count(person):
     #print(f"person is: {person}")
     follower_count = person.get("follower_count")
     #print(f"Follower count is {follower_count}")
-    return follower_count
+    return follower_count 
 
 
 
@@ -62,14 +62,14 @@ def game(person_a, score):
     size_of_data = len(data)
     # print(size_of_data)
     # the last index is the size - 1
-
+    
     # Idea 2
     # Get the persons data from a random index in the list
     #person_a = data[randint(0, size_of_data - 1)]
     #print(person_a)
     person_b = data[randint(0, size_of_data - 1)]
     #print(person_b)
-
+    
     # show each person to help with debugging
     show_person(person_a)
     print(art.vs)
@@ -93,7 +93,7 @@ def game(person_a, score):
 
     # Get the users guess
     guess = input("Who has more followers? Type 'A' or 'B': ").lower()
-
+    
     # Check if the user guessed correctly or not
     #print(f"highest is {highest}")
     if guess == highest:
@@ -116,3 +116,4 @@ person_a = data[randint(0, len(data) - 1)]
 score = 0
 # Pass the person a as a parameter to be able reuse the same person as the new person a
 print(f"Final score is {game(person_a, score)}")
+
