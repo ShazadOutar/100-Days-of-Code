@@ -3,7 +3,6 @@ MENU = {
         "ingredients": {
             "water": 50,
             "coffee": 18,
-            "milk": 0
         },
         "cost": 1.5,
     },
@@ -30,6 +29,7 @@ resources = {
     "milk": 200,
     "coffee": 100,
 }
+profit = 0
 
 # print(resources.keys())
 # print(resources.values())
@@ -64,6 +64,7 @@ def print_report():
     print(f"Water: {resources.get('water')}")
     print(f"Milk: {resources.get('milk')}")
     print(f"Coffee: {resources.get('coffee')}")
+    print(f"Money is: ${profit}")
 
 #print_report()
 
@@ -116,9 +117,9 @@ def get_coins():
     # Get how many of each coin
     # TODO: Uncomment these out at the end
     #quarters = int(input("How many quarters: "))
-    #dimes = int(input("How many quarters: "))
-    #nickels = int(input("How many quarters: "))
-    #pennies = int(input("How many quarters: "))
+    #dimes = int(input("How many dimes: "))
+    #nickels = int(input("How many nickels: "))
+    #pennies = int(input("How many pennies: "))
     
     quarters = 12
     dimes = 1
@@ -141,6 +142,7 @@ def get_coins():
 def is_enough_money(drink_name):
     """
     From the drink name, get the cost of the drink and see if the user entered enough money to pay for it
+    Return True if they did, return False otherwise.
     """
     # Get the money the user entered and the cost of the drink
     money = get_coins()
@@ -155,10 +157,25 @@ def is_enough_money(drink_name):
         return False
 
     # If the user has enough money, add the cost of the drink to the resources dictionary
-    resources["money"] += cost
+    #resources["money"] += cost
+    profit += cost
     change = round(money - cost, 2)
     print(f"Your change is {change}")
     return True
+
+def enough_money(input_money, drink_cost):
+    """ Return true if input is greater than the drink cost"""
+    print(f"input_money is :{input_money}")
+    print(f"drink_cost is :{drink_cost}")
+    if input_money >= drink_cost:
+        global profit
+        profit += drink_cost
+        change = round(input_money - drink_cost, 2)
+        print(f"Here is you change: ${change}")
+        return True
+    else: 
+        print("Sorry that's not enough money")
+        return False
 
 
 
@@ -218,10 +235,27 @@ def coffee_machine():
     coffee_machine()
     return
 
+def is_resource_sufficent(drink_ingredients):
+    print("In is resource sufficent")
+    for item in drink_ingredients:
+        if drink_ingredients[item] >= resources[item]:
+            print(f"Sorry there is not enough {item}")
+            return False
+    return True
 
 
-coffee_machine()
-# TODO: Some bug fixes
-# Money is rewritten every time instead of compounding
-# Doing report ends the program
-# Espresso was edited to have 0 for milk, try to find a work around for that
+is_on = True
+while is_on:
+    choice = get_user_choice()
+    if choice == "off":
+        is_on = False
+    elif choice ==  "report":
+        print_report()
+    else:
+        drink = MENU[choice]
+        print(drink)
+        print(is_resource_sufficent(drink["ingredients"]))
+        if is_resource_sufficent(drink["ingredients"]):
+            payment = get_coins()
+            print(enough_money(payment, drink["cost"]))
+        make_drink(drink) 
