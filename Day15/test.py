@@ -1,3 +1,5 @@
+# TODO: Clean this up later
+
 MENU = {
     "espresso": {
         "ingredients": {
@@ -116,22 +118,22 @@ def get_coins():
     sum = 0
     # Get how many of each coin
     # TODO: Uncomment these out at the end
-    #quarters = int(input("How many quarters: "))
-    #dimes = int(input("How many dimes: "))
-    #nickels = int(input("How many nickels: "))
-    #pennies = int(input("How many pennies: "))
+    quarters = int(input("How many quarters: "))
+    dimes = int(input("How many dimes: "))
+    nickels = int(input("How many nickels: "))
+    pennies = int(input("How many pennies: "))
     
-    quarters = 12
-    dimes = 1
-    nickles = 1
-    pennies = 1
+    # quarters = 12
+    # dimes = 1
+    # nickles = 1
+    # pennies = 1
 
     # Multiply the values of each coin by the amount of each
     #for key in coin_values.values():
     #    print(key)
     sum += (quarters * coin_values.get("quarter"))
     sum += (dimes * coin_values.get("dime"))
-    sum += (nickles * coin_values.get("nickel"))
+    sum += (nickels * coin_values.get("nickel"))
     sum += (pennies * coin_values.get("penny"))
 
     return sum / 100
@@ -171,7 +173,7 @@ def enough_money(input_money, drink_cost):
         global profit
         profit += drink_cost
         change = round(input_money - drink_cost, 2)
-        print(f"Here is you change: ${change}")
+        print(f"Here is your change: ${change}")
         return True
     else: 
         print("Sorry that's not enough money")
@@ -197,9 +199,14 @@ def make_drink(drink_name):
     resources["water"] -= needed_water
     resources["milk"] -= needed_milk
     resources["coffee"] -= needed_coffee
-
     return 
 
+def make_coffee(drink_name, order_ingredients):
+    print(f"drink name is {drink_name}")
+    print((f"order ingredients is {order_ingredients}"))
+    for item in order_ingredients:
+        resources[item] -= order_ingredients[item]
+    print(f"Here is your {drink_name}!")
 #print("Resources before making drink is\n")
 #print_report()
 #print(make_drink(MENU.get("latte")))
@@ -238,7 +245,7 @@ def coffee_machine():
 def is_resource_sufficent(drink_ingredients):
     print("In is resource sufficent")
     for item in drink_ingredients:
-        if drink_ingredients[item] >= resources[item]:
+        if drink_ingredients[item] > resources[item]:
             print(f"Sorry there is not enough {item}")
             return False
     return True
@@ -257,5 +264,7 @@ while is_on:
         print(is_resource_sufficent(drink["ingredients"]))
         if is_resource_sufficent(drink["ingredients"]):
             payment = get_coins()
-            print(enough_money(payment, drink["cost"]))
-        make_drink(drink) 
+            #print(enough_money(payment, drink["cost"]))
+            if enough_money(input_money=payment, drink_cost=drink["cost"]):
+                make_coffee(choice, drink["ingredients"])
+
