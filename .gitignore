@@ -1,3 +1,12 @@
 *.pyc
 __pycache__/
 .idea/
+Day16/.config/
+Day16/.replit/
+Day16/.ump/
+Day16/replit.nix
+Day16/replit_zip_error_log.txt
+Day16/venv
+Day16/.cache/
+Day16/.replit
+Day16/.upm/
