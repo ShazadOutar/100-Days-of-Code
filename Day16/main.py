@@ -29,6 +29,7 @@ while is_on:
     elif choice == "report":
         # print the report
         my_coffee_maker.report()
+        process_money.report()
     else:
         # if not off or report, assume it's a drink
         # check resources sufficent
@@ -50,9 +51,13 @@ while is_on:
             #     print(value)
             my_item = MenuItem(name=choice, water=water_cost, milk=milk_cost, coffee=coffee_cost, cost=money_cost)
             # check if there are sufficient resources
-            if my_coffee_maker.is_resource_sufficient(my_item):
-                # if there are enough resources, start processing the input money
-                # if true then the payment was accepted
+            # if my_coffee_maker.is_resource_sufficient(my_item):
+            #     # if there are enough resources, start processing the input money
+            #     # if true then the payment was accepted
+            #     if process_money.make_payment(money_cost):
+            #         # after payment is accepted make the coffee
+            #         my_coffee_maker.make_coffee(my_item)
+            # no need to do use the my_item, could just pass the menu item instead
+            if my_coffee_maker.is_resource_sufficient(menu_choice):
                 if process_money.make_payment(money_cost):
-                    # after payment is accepted make the coffee
-                    my_coffee_maker.make_coffee(my_item)
+                    my_coffee_maker.make_coffee(menu_choice)
