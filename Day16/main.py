@@ -32,11 +32,11 @@ while is_on:
         process_money.report()
     else:
         # if not off or report, assume it's a drink
-        # check resources sufficent
-        #print(f"Choice is {choice}")
+        # check resources sufficient
+        # print(f"Choice is {choice}")
         menu_choice = my_menu.find_drink(choice)
         # check that it's a valid menu option
-        if menu_choice: # check if it doesn't return none
+        if menu_choice:  # check if it doesn't return none
             # check if resources sufficient
             # print(menu_choice)
             # print(menu_choice.ingredients)
