@@ -19,7 +19,7 @@ user_guess = screen.textinput(title="Make your bet", prompt="Which color do you 
 finsh = Turtle()
 finsh.hideturtle()
 finsh.penup()
-finsh.goto(finish_line_x, -height / 2 + padding)
+finsh.goto(finish_line_x + 20, -height / 2 + padding)
 finsh.left(90)
 finsh.pendown()
 finsh.forward(height - padding * 2)
@@ -49,8 +49,12 @@ winning_turtle = ""
 while is_race_on:
     for turtle_index in racers:
         if turtle_index.xcor() > finish_line_x:
-            winning_turtle = turtle_index.pencolor()
             is_race_on = False
+            winning_turtle = turtle_index.pencolor()
+            if winning_turtle == user_guess:
+                print(f"You've won! The winning color is {winning_turtle}")
+            else:
+                print(f"You've lost. The winning color is {winning_turtle}")
         random_distance = random.randint(1, 10)
         turtle_index.forward(random_distance)
 
