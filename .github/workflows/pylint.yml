@@ -1,26 +1,35 @@
-name: Pylint
+name: Pylint Check
 
 on:
   push:
     branches:
-    - main
+      - main
 
 jobs:
-  build:
-    runs-on: windows-latest
-    strategy:
-      matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+  pylint:
+    runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.x  # Replace with your desired Python version
+
     - name: Install dependencies
+      run: pip install pylint
+
+    - name: Determine changed Python files
+      id: changed_files
       run: |
-        python -m pip install --upgrade pip
-        pip install pylint
-    - name: Analysing the code with pylint
+        echo "::set-output name=python_files::$(git diff --name-only --diff-filter=AM -- '*.py')"
+      shell: bash
+
+    - name: Run Pylint on changed files
       run: |
-        pylint $(git ls-files '*.py')
+        if [[ -n "${{ steps.changed_files.outputs.python_files }}" ]]; then
+          pylint ${{ steps.changed_files.outputs.python_files }}
+        fi
+      shell: bash
