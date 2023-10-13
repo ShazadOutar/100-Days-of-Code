@@ -11,7 +11,7 @@ screen.bgcolor("black")
 screen.title("Snake Game")
 screen.tracer(0)
 
-# create the snake using the Snake class from snake.py
+# create the snake, food, and scoreboard
 game_is_on = True
 my_snake = Snake()
 new_food = Food()
@@ -46,12 +46,9 @@ while game_is_on:
         game_is_on = False
 
     # detect collision with tail
-    for segment in my_snake.segments:
-        if segment == my_snake.head:
-            pass
-        elif my_snake.head.distance(segment) < 10:
+    for segment in my_snake.segments[1:]:
+        if my_snake.head.distance(segment) < 10:
             game_is_on = False
             scoreboard.game_over()
-            pass
 
 screen.exitonclick()
