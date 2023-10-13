@@ -14,13 +14,16 @@ class Scoreboard(Turtle):
         self.pencolor("white")
         self.hideturtle()
         self.goto(x=0, y=HEIGHT // 2 - PADDING * 2)
+        self.update_text()
+
+    def update_text(self):
         self.write(f"Score: {self.score}", move=False, align=ALIGNMENT, font=FONT)
 
     def increase_score(self):
         # first clear the current scoreboard, then increase the score by 1 and rewrite
         self.clear()
         self.score += 1
-        self.write(f"Score: {self.score}", move=False, align="center", font=("Arial", 20, "normal"))
+        self.update_text()
 
     def game_over(self):
         self.home()
