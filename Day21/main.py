@@ -1,3 +1,4 @@
+"""Main file to handle the snake game"""
 from turtle import Screen
 from snake import Snake
 from constants import HEIGHT, WIDTH, PADDING
