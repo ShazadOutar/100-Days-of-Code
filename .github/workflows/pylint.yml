@@ -12,12 +12,12 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
-        python-version: 3.x  # Replace with your desired Python version
+        python-version: 3.11
 
     - name: Install dependencies
       run: pip install pylint
@@ -31,6 +31,12 @@ jobs:
     - name: Run Pylint on changed files
       run: |
         if [[ -n "${{ steps.changed_files.outputs.python_files }}" ]]; then
-          pylint ${{ steps.changed_files.outputs.python_files }}
+          pylint --output-format=text ${{ steps.changed_files.outputs.python_files }} > pylint-report.txt
         fi
       shell: bash
+
+    - name: Upload Pylint report
+      uses: actions/upload-artifact@v3
+      with:
+        name: pylint-report
+        path: pylint-report.txt
