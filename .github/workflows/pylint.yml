@@ -17,7 +17,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
-        python-version: 3.11
+        python-version: 3.11  
 
     - name: Install dependencies
       run: pip install pylint
@@ -25,13 +25,13 @@ jobs:
     - name: Determine changed Python files
       id: changed_files
       run: |
-        echo "::set-output name=python_files::$(git diff --name-only --diff-filter=AM -- '*.py')"
+        echo "python_files=$(git diff --name-only --diff-filter=AM -- '*.py')" >> $GITHUB_ENV
       shell: bash
 
     - name: Run Pylint on changed files
       run: |
-        if [[ -n "${{ steps.changed_files.outputs.python_files }}" ]]; then
-          pylint --output-format=text ${{ steps.changed_files.outputs.python_files }} > pylint-report.txt
+        if [[ -n "$python_files" ]]; then
+          pylint --output-format=text $python_files > pylint-report.txt
         fi
       shell: bash
 
