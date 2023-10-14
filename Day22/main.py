@@ -1,4 +1,5 @@
 """Main file for the Day22 Project"""
+
 from turtle import Screen, Turtle
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from paddle import Paddle
@@ -18,3 +19,8 @@ game_screen.onkey(key="s", fun=paddle.down)
 
 # keep this last, it doesn't run the code below it
 game_screen.exitonclick()
+=======
+from turtle import Screen
+screen = Screen()
+print("Pong")
+screen.exitonclick()
