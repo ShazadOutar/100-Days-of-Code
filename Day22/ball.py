@@ -12,6 +12,7 @@ class Ball(Turtle):
         # use a direction attribute to help with bounce
         self.x_move = 10
         self.y_move = 10
+        self.move_speed = 0.1
 
     def move_x(self, distance):
         self.setx(self.xcor() + distance)
@@ -33,9 +34,12 @@ class Ball(Turtle):
         self.y_move *= -1
 
     def bounce_x(self):
+        # bounce x only happens when the paddle blocks, so we can update the speed here
         self.x_move *= -1
+        self.move_speed *= 0.9
 
     def ball_reset(self):
         self.reset()
         self.color("white")
         self.bounce_x()
+        self.move_speed = 0.1

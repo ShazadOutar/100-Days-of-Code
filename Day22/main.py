@@ -5,6 +5,7 @@ import time
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH, BALL_SIZE
 from paddle import Paddle
 from ball import Ball
+from scoreboard import ScoreBoard
 print("Pong")
 
 # create the screen for the game
@@ -23,6 +24,9 @@ left_paddle = Paddle((-350, 0))
 # create the ball
 ball = Ball((0, 0))
 
+# create the scoreboard
+scoreboard = ScoreBoard()
+
 game_screen.onkey(key="Up", fun=left_paddle.up)
 game_screen.onkey(key="Down", fun=left_paddle.down)
 game_screen.onkey(key="w", fun=right_paddle.up)
@@ -32,7 +36,7 @@ game_screen.onkey(key="q", fun=game_screen.bye)
 game_is_on = True
 while game_is_on:
     # set the delay
-    time.sleep(0.1)
+    time.sleep(ball.move_speed)
     game_screen.update()
 
     # check if it collided with upper or lower boarders
@@ -44,8 +48,8 @@ while game_is_on:
         # pass
         ball.move()
     # detect collision with paddle
-    if (ball.distance(right_paddle) < 50 and ball.xcor() > 320)\
-            or (ball.distance(left_paddle) < 50 and ball.xcor() < -320):
+    if (ball.distance(right_paddle) < 30 and ball.xcor() > 320)\
+            or (ball.distance(left_paddle) < 30 and ball.xcor() < -320):
         print("blocked")
         ball.bounce_x()
 
@@ -54,8 +58,10 @@ while game_is_on:
         print("scored")
         # reset the ball position
         ball.ball_reset()
+        scoreboard.l_point()
     # past the left paddle
     if ball.xcor() < - 380:
         ball.ball_reset()
+        scoreboard.r_point()
 # keep this last, it doesn't run the code below it
 game_screen.exitonclick()
