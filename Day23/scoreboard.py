@@ -9,11 +9,15 @@ class Scoreboard(Turtle):
         self.hideturtle()
         self.goto(-SCREEN_WIDTH//2 + 20, SCREEN_HEIGHT//2 - 40)
         self.level = 1
-        self.update(self.level)
+        self.update()
 
-    def update(self, level):
+    def increase_level(self):
+        self.level += 1
+        self.update()
+
+    def update(self):
         self.clear()
-        self.write(f"Level: {level}", move=False, align="left", font=("Ariel", 20, "normal"))
+        self.write(f"Level: {self.level}", move=False, align="left", font=("Ariel", 20, "normal"))
 
     def game_over(self):
         # self.clear()
