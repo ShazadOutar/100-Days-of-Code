@@ -43,13 +43,17 @@ while game_is_on:
     if (my_snake.head.xcor() > (WIDTH // 2 - PADDING) or my_snake.head.xcor() < (-WIDTH // 2 + PADDING) or
             my_snake.head.ycor() > (HEIGHT // 2 - PADDING)) or my_snake.head.ycor() < (-HEIGHT // 2 + PADDING):
         print("Bonk")
-        scoreboard.game_over()
-        game_is_on = False
+        # scoreboard.game_over()
+        # game_is_on = False
+        scoreboard.game_reset()
+        my_snake.reset()
 
     # detect collision with tail
     for segment in my_snake.segments[1:]:
         if my_snake.head.distance(segment) < 10:
-            game_is_on = False
-            scoreboard.game_over()
+            # game_is_on = False
+            # scoreboard.game_over()
+            scoreboard.game_reset()
+            my_snake.reset()
 
 screen.exitonclick()
