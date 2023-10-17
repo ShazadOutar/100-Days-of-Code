@@ -50,6 +50,14 @@ class Snake:
         # self.segments[first].forward(MOVE_DISTANCE)
         self.head.forward(MOVE_DISTANCE)
 
+    def reset(self):
+        for seg in self.segments:
+            seg.goto(1000, 1000)
+        # clear all segments
+        self.segments.clear()
+        self.create_snake()
+        self.head = self.segments[0]
+
     def up(self):
         # change direction by setting the heading of the first segment
         # to avoid going back on yourself, check if you're not already going opposite your input
