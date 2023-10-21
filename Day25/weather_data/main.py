@@ -4,7 +4,7 @@
 # print(data)
 
 # we could do this above but python has built-in support for csv data
-import csv
+# import csv
 
 # with open("weather_data.csv") as data_file:
 #     data = csv.reader(data_file)
