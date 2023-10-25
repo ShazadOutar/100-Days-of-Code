@@ -5,7 +5,7 @@ Project Requirements:
 3. Write correct guesses onto the map ✔️
 4. Use a loop to allow the user to keep guessing ✔️
 5. Record the correct guesses in a list ✔️
-6. Keep track of the score
+6. Keep track of the score ✔️
 """
 
 import turtle
@@ -62,7 +62,10 @@ def get_state_location(state_name):
     # print(y.get(state_name))
     return [x, y]
 
+
 FONT = ("Arial", 8, "normal")
+
+
 def write_state_name(state_name, location):
     # use a turtle to write the name on the map
     writing_turtle = turtle.Turtle()
