@@ -1,11 +1,12 @@
+
 with open("file1.txt") as file1:
     numbers =  file1.readlines()
 
 #print(type(numbers))
-#print(numbers)
+# print(numbers)
 no_new_line = [num.replace("\n", "") for num in numbers]
-no_new_line.pop()
-#print(no_new_line)
+# no_new_line.pop()
+# print(no_new_line)
 file1_nums = no_new_line
 # print(file1_nums)
 def get_nums(file_name):
@@ -19,17 +20,18 @@ def get_nums(file_name):
 
 file1_nums = get_nums("file1.txt")
 file2_nums = get_nums("file2.txt")
-#print(get_nums("file1.txt"))
-#print(get_nums("file2.txt"))
+# print(get_nums("file1.txt"))
+# print(get_nums("file2.txt"))
 print(file1_nums)
 print(file2_nums)
 
 result = []
-#find which numbers are in both lists
+# find which numbers are in both lists
 for i in file1_nums:
     if i in file2_nums:
         result.append(i)
-for i in file2_nums:
-    if i in file1_nums and not in results:
-        results.append(i)
+        # pass
+#for i in file2_nums:
+#    if i in file1_nums and i not in result:
+#        result.append(i)
 print(result)
