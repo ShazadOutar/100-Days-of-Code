@@ -119,10 +119,15 @@ def find_password():
     # check if the input website matches any in the json data
     # first load the json data
     website_input = website_entry.get().title()
-    with open("data.json", "r") as file_data:
-        data = json.load(file_data)
-        # print(data)
-        # print(type(data)) # is of type dict
+    # catch the FileNotFoundError when there is no data.json file found
+    try:
+        with open("data.json", "r") as file_data:
+            data = json.load(file_data)
+            # print(data)
+            # print(type(data)) # is of type dict
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error", message="No data file found")
+    else:
         if website_input in data:
             # If website match found, display the messagebox
             # print(data[website_input])
@@ -132,6 +137,7 @@ def find_password():
         else:
             messagebox.showinfo("Oops", f"No details for the website {website_input} found")
             # print(f"{website_input} not found")
+
 
 # ---------------------------- UI SETUP ------------------------------- #
 # TODO #1: Create a canvas with the logo centered. Canvas of 200x200 and 20px of screen padding
