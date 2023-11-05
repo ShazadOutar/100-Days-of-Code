@@ -52,17 +52,38 @@ def new_card():
 
 # -------------------------------CARDS SECTION-------------------------------
 def show_card():
-    show_card_front()
-    sleep(3)
-    show_card_back()
+    # show the new card on the front with French
+    random_card = get_random_word()
+    french_word = random_card[0]
+    english_word = random_card[1]
 
 
-def show_card_front():
-    pass
+    card.delete("all")
+    show_card_front(french_word)
+    window.after(3000)
+    show_card_back(english_word)
+    # card.
 
 
-def show_card_back():
-    pass
+def show_card_front(french_word):
+    print(f"Card Front: {french_word}")
+    # show the French side
+    card.create_image(450, 300, image=card_front_img)
+    # card.itemconfig(card_question, text="English")
+    card_question = card.create_text(450, 200, text="Question", font=QUESTION_FONT)
+    card_answer = card.create_text(450, 350, text="Answer", font=ANSWER_FONT)
+    card.grid(column=0, row=0)
+    # card.create_text(450, 200, text="French", font=QUESTION_FONT, fill="black")
+    # card.create_text(450, 350, text=french_word, font=ANSWER_FONT, fill="black")
+
+
+def show_card_back(english_word):
+    print(f"Card Back: {english_word}")
+    # show the English side
+    card.create_image(450, 300, image=card_back_img)
+    # card.itemconfig(card_question, text="English")
+    card.create_text(450, 200, text="English", font=QUESTION_FONT, fill="white")
+    card.create_text(450, 350, text=english_word, font=ANSWER_FONT, fill="white")
 
 
 # -------------------------------UI SECTION-------------------------------
@@ -85,7 +106,8 @@ card.grid(column=0, row=0, columnspan=2)
 right_img = PhotoImage(file="images/right.png")
 wrong_img = PhotoImage(file="images/wrong.png")
 
-right_button = Button(image=right_img, borderwidth=0, highlightthickness=0, command=new_card)
+# right_button = Button(image=right_img, borderwidth=0, highlightthickness=0, command=new_card)
+right_button = Button(image=right_img, borderwidth=0, highlightthickness=0, command=show_card)
 right_button.grid(column=0, row=1)
 
 wrong_button = Button(image=wrong_img, borderwidth=0, highlightthickness=0, command=new_card)
