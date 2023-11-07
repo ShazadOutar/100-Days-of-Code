@@ -58,7 +58,6 @@ def show_card():
     english_word = random_card[1]
 
 
-    card.delete("all")
     show_card_front(french_word)
     window.after(3000)
     show_card_back(english_word)
