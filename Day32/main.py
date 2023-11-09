@@ -1,28 +1,44 @@
-import smtplib
-import socket
-# socket.getaddrinfo('localhost', 8080)
+##################### Extra Hard Starting Project ######################
+
+# 1. Update the birthdays.csv
+
+# 2. Check if today matches a birthday_info in the birthdays.csv
+import datetime as dt
+
+today = dt.datetime.now().date()
+# print(today.month)
+print(today)
+
+import pandas
+
+birthdays_dataframe = pandas.read_csv("birthdays.csv")
+print(birthdays_dataframe)
+birthdays_dictionary = {}
+# birthdays_dict can be {[name, email] : birthday}
+for birthday_row in birthdays_dataframe.iterrows():
+    # print(birthday_row[1])
+    birthday_info = birthday_row[1]
+    name = birthday_info["name"]
+    email = birthday_info["email"]
+    month = birthday_info["month"]
+    day = birthday_info["day"]
+    year = birthday_info["year"]
+    birthday_date = dt.datetime(year=year, month=month, day=day).date()
+    print(birthday_date)
+    birthdays_dictionary.update({name: birthday_date})
+
+print(birthdays_dictionary)
 
 
-my_email = "j2tJyiA3hMqd@gmail.com"
-# password = "+8Wr9FhRmsN"
-password = "aptobeejheobmmwd"
-receiving_email = "testing_something42@yahoo.com"
+def same_date(date1, date2):
+    if date1.month == date2.month and date1.day == date2.day:
+        print(f"{date1} and {date2} are the same day")
+        return True
+    return False
 
-# this is different for each email provider, Gmail and Yahoo are different
-# connection = smtplib.SMTP("smtp.gmail.com", port=587)
-# # Secure the connection to the email provider
-# connection.starttls()
-# connection.login(user=my_email,password=password)
-# connection.sendmail(
-#     from_addr=my_email,
-#     to_addrs=receiving_email,
-#     msg="Subject:Hello in the Subject Line\n\nThis is the body of the email")
-# connection.close()
 
-with smtplib.SMTP("smtp.gmail.com", port=587) as connection:
-    connection.starttls()
-    connection.login(user=my_email, password=password)
-    connection.sendmail(
-        from_addr=my_email,
-        to_addrs=receiving_email,
-        msg="Subject:Hello in the Subject Line\n\nThis is the body of the email")
+# print(birthdays_dictionary["John"])
+# same_date(today, birthdays_dictionary["John"])
+# 3. If step 2 is true, pick a random letter from letter templates and replace the [NAME] with the person's actual name from birthdays.csv
+if same_date(today, )
+# 4. Send the letter generated in step 3 to that person's email address.
