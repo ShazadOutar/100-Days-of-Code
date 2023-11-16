@@ -1,3 +1,5 @@
+import smtplib
+
 import requests
 import json
 from datetime import datetime
@@ -5,12 +7,22 @@ from datetime import datetime
 STOCK = "TSLA"
 COMPANY_NAME = "Tesla Inc"
 alphavantage_api_key = ""
+news_api_key = ""
+SENDING_EMAIL = "j2tJyiA3hMqd@gmail.com"
+SENDING_EMAIL_PASSWORD = ""
+PERSONAL_EMAIL = ""
 
 
 def get_passwords():
     with open("passwords.txt", "r") as file:
-        global alphavantage_api_key
-        alphavantage_api_key = file.readlines()[0]
+        global alphavantage_api_key, news_api_key, SENDING_EMAIL_PASSWORD, PERSONAL_EMAIL
+        data = file.readlines()
+        alphavantage_api_key = data[0]
+        news_api_key = data[1]
+        SENDING_EMAIL_PASSWORD = data[2]
+        PERSONAL_EMAIL = data[3]
+        print(f"API keys are alphavantage = {alphavantage_api_key}\n"
+              f"news api key = {news_api_key}\n")
 
 
 def get_stock_data_r(stock_name: str):
@@ -70,11 +82,41 @@ def get_previous_days() -> tuple[str, str]:
     return yesterday_str, previous_day_str
 
 
-# STEP 2: Use https://newsapi.org
+# TODO: STEP 2: Use https://newsapi.org
 # Instead of printing ("Get News"), actually get the first 3 news pieces for the COMPANY_NAME.
+def get_news(company_name) -> list:
+    today = datetime.date(datetime.now()).__str__()
+    parameters = {
+        "q": company_name,
+        "from": today,
+        "sortBy": "popularity",
+        "apiKey": "f2ee3e7a67b64eddb584afd333449f04"
+        # "apiKey": news_api_key.rstrip("%0A")
+    }
+    print(f"Today {today} {type(today)}")
+    print(f"Api key is {news_api_key} {type(news_api_key)}")
+    response = requests.get(url="https://newsapi.org/v2/everything", params=parameters)
+    response.raise_for_status()
+    data = response.json()
+    # articles = data["articles"]
+    # TODO: Make this  try and catch for if there's less than 3 articles that return
+    articles = [article for article in data["articles"][:3]]
+    print(data)
+    print(articles)
+    return articles
 
-# STEP 3: Use https://www.twilio.com
+
+# TODO: STEP 3: Use https://www.twilio.com
 # Send a seperate message with the percentage change and each article's title and description to your phone number.
+def send_message(subject, body):
+    with smtplib.SMTP("smtp.gmail.com", port=587) as connection:
+        connection.starttls()
+        connection.login(user=SENDING_EMAIL, password=SENDING_EMAIL_PASSWORD)
+        connection.sendmail(
+            from_addr=SENDING_EMAIL,
+            to_addrs=PERSONAL_EMAIL,
+            msg=f"Subject:{subject}\n\n{body}"
+        )
 
 
 # Optional: Format the SMS message like this:
@@ -97,7 +139,7 @@ def main():
     # get_passwords()
     # data = get_stock_data(STOCK)
     # print(data)
-    # # STEP 1: Use https://www.alphavantage.co
+    # TODO: STEP 1: Use https://www.alphavantage.co
     # # When STOCK price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
     # print(data["Time Series (Daily)"])
     # current_date = datetime.date(datetime.now())
@@ -132,9 +174,25 @@ def main():
     print(previous_day_close_value)
     # percent_change(yesterday_close_value, previous_day_close_value)
     # percent_change(previous_day_close_value, yesterday_close_value)
-    if percent_change(yesterday_close_value, previous_day_close_value) >= 5:
+    percent_change_value = percent_change(yesterday_close_value, previous_day_close_value)
+    percent_change_value = 5
+    if percent_change_value >= 5:
         # if the percent difference is over 5% do the next part
         print("get news")
+        top_three_articles = get_news(COMPANY_NAME)
+        # article_title = top_three_articles[0]["title"]
+        # article_description = top_three_articles[0]["description"]
+        # body = f"{article_title}\n{article_description}"
+        # send_message(subject=f"{STOCK}: {percent_change_value}", body=body)
+        for count in range(3):
+            article_title = top_three_articles[count]["title"]
+            article_description = top_three_articles[count]["description"]
+            body = "".join((article_title, article_description)).encode("utf-8").strip()
+            send_message(subject=f"{STOCK}: {percent_change_value}", body=body)
+    else:
+        print(f"Change was only: {percent_change_value}")
+    # get_news(COMPANY_NAME)
+    # send_message(subject="Hello", body="From Day 36")
 
 
 if __name__ == "__main__":
