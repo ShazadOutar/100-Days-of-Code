@@ -2,30 +2,39 @@ import smtplib
 
 import requests
 import json
+import os
 from datetime import datetime
 
 STOCK = "TSLA"
 COMPANY_NAME = "Tesla Inc"
-alphavantage_api_key = ""
-news_api_key = ""
+# alphavantage_api_key = ""
+# news_api_key = ""
 SENDING_EMAIL = "j2tJyiA3hMqd@gmail.com"
-SENDING_EMAIL_PASSWORD = ""
-PERSONAL_EMAIL = ""
+# SENDING_EMAIL_PASSWORD = ""
+# PERSONAL_EMAIL = ""
+alphavantage_api_key = os.environ["alphavantage_api_key"]
+news_api_key = os.environ["news_api_key"]
+SENDING_EMAIL_PASSWORD = os.environ["SENDING_EMAIL_PASSWORD"]
+PERSONAL_EMAIL = os.environ["PERSONAL_EMAIL"]
 
 
-def get_passwords():
-    with open("passwords.txt", "r") as file:
-        global alphavantage_api_key, news_api_key, SENDING_EMAIL_PASSWORD, PERSONAL_EMAIL
-        data = file.readlines()
-        alphavantage_api_key = data[0]
-        news_api_key = data[1]
-        SENDING_EMAIL_PASSWORD = data[2]
-        PERSONAL_EMAIL = data[3]
-        print(f"API keys are alphavantage = {alphavantage_api_key}\n"
-              f"news api key = {news_api_key}\n")
+# def get_passwords():
+#     with open("passwords.txt", "r") as file:
+#         global alphavantage_api_key, news_api_key, SENDING_EMAIL_PASSWORD, PERSONAL_EMAIL
+#         data = file.readlines()
+        # alphavantage_api_key = data[0]
+        # news_api_key = data[1]
+        # SENDING_EMAIL_PASSWORD = data[2]
+        # PERSONAL_EMAIL = data[3]
+        # alphavantage_api_key = os.environ["alphavantage_api_key"]
+        # news_api_key = os.environ["news_api_key"]
+        # SENDING_EMAIL_PASSWORD = os.environ["SENDING_EMAIL_PASSWORD"]
+        # PERSONAL_EMAIL = os.environ["PERSONAL_EMAIL"]
+        # print(f"API keys are alphavantage = {alphavantage_api_key}\n"
+        #       f"news api key = {news_api_key}\n")
 
 
-def get_stock_data_r(stock_name: str):
+def get_stock_data(stock_name: str):
     parameters = {
         "function": "TIME_SERIES_DAILY",
         "symbol": stock_name,
@@ -40,7 +49,7 @@ def get_stock_data_r(stock_name: str):
     return data
 
 
-def get_stock_data(stock_name):
+def get_stock_data_r(stock_name):
     # temp function while I can't make any more api calls
     with open("data.json") as json_file:
         data = json.load(json_file)
@@ -158,11 +167,10 @@ def main():
     # print(f'{two_days_ago_str}, {data["Time Series (Daily)"]["2023-11-10"]}')
 
     # print(get_previous_days())
-    get_passwords()
+    # get_passwords()
     data = get_stock_data(STOCK)
     print(data)
     print(data["Time Series (Daily)"])
-    # print(dat)
 
     previous_days = get_previous_days()
 
@@ -194,6 +202,10 @@ def main():
     # get_news(COMPANY_NAME)
     # send_message(subject="Hello", body="From Day 36")
 
+# def main():
+#     print("Hello")
+    # data = get_stock_data(STOCK)
+    # print(data)
 
 if __name__ == "__main__":
     main()
