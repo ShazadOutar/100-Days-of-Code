@@ -1,6 +1,7 @@
 import requests
+import os
 
-sheety_endpoint = "https://api.sheety.co/54a5c9fc2c1ce03f86296e0da8c2aee0/flightDeals/prices"
+sheety_endpoint = os.environ["sheety_endpoint"]
 
 
 class DataManager:
@@ -17,19 +18,20 @@ class DataManager:
     def print_sheet(self):
         print(self.destination_data)
 
+
     def update_iata_code(self):
         for city_dict in self.destination_data:
             print(city_dict)
             # price is the key for the dict the put request goes to
             new_data = {
                 "price": {
-                    "iataCode": "TESTING"
+                    "iataCode": ""
                 }
             }
             print(f"\nCity Dict is {city_dict}\n new data is {new_data}")
             iataCode = city_dict["iataCode"]
-            # if iataCode == "TESTING":
-            if True:
+            if iataCode == "":
+            # if True:
                 row_id = city_dict["id"]
                 response = requests.put(
                     url=f"{sheety_endpoint}/{row_id}",
