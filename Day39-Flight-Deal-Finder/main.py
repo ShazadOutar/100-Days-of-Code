@@ -6,12 +6,11 @@ from flight_search import FlightSearch
 # achieve the program requirements.
 
 # Read the sheet and print what the sheet currently has
-# sheet = DataManager()
-# sheet.read_sheet()
-# pprint(sheet.destination_data)
-# sheet_data = sheet.destination_data
-# sheet.update_iata_code()
-# pprint(sheet.destination_data)
+sheet = DataManager()
+# sheet.update_iata_codes()
+sheet_data = sheet.read_sheet()
+sheet.update_iata_codes()
+pprint(sheet_data)
 
-flight_search = FlightSearch()
-flight_search.get_iata_code("Paris")
+# search = FlightSearch()
+# search.get_trip_price("PAR")
