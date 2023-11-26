@@ -10,7 +10,7 @@ class DataManager:
     def __init__(self):
         self.destination_data = None
 
-    def read_sheet(self):
+    def read_sheet(self) -> list:
         response = requests.get(url=sheety_endpoint)
         response.raise_for_status()
         self.destination_data = response.json()["prices"]
@@ -21,11 +21,14 @@ class DataManager:
 
     def update_iata_codes(self):
         for city_dict in self.destination_data:
-            # print(city_dict)
+            print(f"city dict is {city_dict}")
             search = FlightSearch()
             # price is the key for the dict the put request goes to
             iataCode = search.get_iata_code(city_name=city_dict["city"])
-            currentPrice = search.get_trip_price(destination_iata_code=iataCode)
+            if iataCode == "NYC":
+                currentPrice = 0
+            else:
+                currentPrice = search.get_trip_price(destination_iata_code=iataCode)
             new_data = {
                 "price": {
                     # "iataCode": search.get_iata_code(city_name=city_dict["city"]),
@@ -38,6 +41,7 @@ class DataManager:
             iataCode = city_dict["iataCode"]
             # if iataCode == "":
             if True:
+            # if iataCode != "NYC":
                 row_id = city_dict["id"]
                 response = requests.put(
                     url=f"{sheety_endpoint}/{row_id}",
