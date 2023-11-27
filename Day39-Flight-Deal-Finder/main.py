@@ -1,5 +1,4 @@
 from data_manager import DataManager
-from pprint import pprint
 from flight_search import FlightSearch
 from notification_manager import NotificationManager
 from flight_data import FlightData
@@ -29,10 +28,12 @@ def main():
 
     # read the sheet data
     # sheet_data = DataManager().read_sheet()
-    FlightData().find_discounted()
+    discounts = FlightData().find_discounted()
+    print(discounts)
+    # pass the discounts list to the notification manager
 
     # email discount info
-    # email = NotificationManager().send_email()
+    NotificationManager.send_email(discounts)
 
 
 
