@@ -7,31 +7,11 @@ from datetime import datetime
 
 STOCK = "TSLA"
 COMPANY_NAME = "Tesla Inc"
-# alphavantage_api_key = ""
-# news_api_key = ""
 SENDING_EMAIL = "j2tJyiA3hMqd@gmail.com"
-# SENDING_EMAIL_PASSWORD = ""
-# PERSONAL_EMAIL = ""
 alphavantage_api_key = os.environ["alphavantage_api_key"]
 news_api_key = os.environ["news_api_key"]
 SENDING_EMAIL_PASSWORD = os.environ["SENDING_EMAIL_PASSWORD"]
 PERSONAL_EMAIL = os.environ["PERSONAL_EMAIL"]
-
-
-# def get_passwords():
-#     with open("passwords.txt", "r") as file:
-#         global alphavantage_api_key, news_api_key, SENDING_EMAIL_PASSWORD, PERSONAL_EMAIL
-#         data = file.readlines()
-        # alphavantage_api_key = data[0]
-        # news_api_key = data[1]
-        # SENDING_EMAIL_PASSWORD = data[2]
-        # PERSONAL_EMAIL = data[3]
-        # alphavantage_api_key = os.environ["alphavantage_api_key"]
-        # news_api_key = os.environ["news_api_key"]
-        # SENDING_EMAIL_PASSWORD = os.environ["SENDING_EMAIL_PASSWORD"]
-        # PERSONAL_EMAIL = os.environ["PERSONAL_EMAIL"]
-        # print(f"API keys are alphavantage = {alphavantage_api_key}\n"
-        #       f"news api key = {news_api_key}\n")
 
 
 def get_stock_data(stock_name: str):
@@ -49,7 +29,7 @@ def get_stock_data(stock_name: str):
     return data
 
 
-def get_stock_data_r(stock_name):
+def get_stock_data_testing():
     # temp function while I can't make any more api calls
     with open("data.json") as json_file:
         data = json.load(json_file)
@@ -99,11 +79,11 @@ def get_news(company_name) -> list:
         "q": company_name,
         "from": today,
         "sortBy": "popularity",
-        "apiKey": "f2ee3e7a67b64eddb584afd333449f04"
+        "apiKey": news_api_key
         # "apiKey": news_api_key.rstrip("%0A")
     }
-    print(f"Today {today} {type(today)}")
-    print(f"Api key is {news_api_key} {type(news_api_key)}")
+    # print(f"Today {today} {type(today)}")
+    # print(f"Api key is {news_api_key} {type(news_api_key)}")
     response = requests.get(url="https://newsapi.org/v2/everything", params=parameters)
     response.raise_for_status()
     data = response.json()
@@ -192,20 +172,24 @@ def main():
         # article_description = top_three_articles[0]["description"]
         # body = f"{article_title}\n{article_description}"
         # send_message(subject=f"{STOCK}: {percent_change_value}", body=body)
-        for count in range(3):
-            article_title = top_three_articles[count]["title"]
-            article_description = top_three_articles[count]["description"]
-            body = "".join((article_title, article_description)).encode("utf-8").strip()
-            send_message(subject=f"{STOCK}: {percent_change_value}", body=body)
+        try:
+            for count in range(3):
+                article_title = top_three_articles[count]["title"]
+                article_description = top_three_articles[count]["description"]
+                body = "".join((article_title, article_description)).encode("utf-8").strip()
+                send_message(subject=f"{STOCK}: {percent_change_value}", body=body)
+        except IndexError:
+            pass
     else:
         print(f"Change was only: {percent_change_value}")
     # get_news(COMPANY_NAME)
     # send_message(subject="Hello", body="From Day 36")
 
+
 # def main():
 #     print("Hello")
-    # data = get_stock_data(STOCK)
-    # print(data)
+# data = get_stock_data(STOCK)
+# print(data)
 
 if __name__ == "__main__":
     main()
