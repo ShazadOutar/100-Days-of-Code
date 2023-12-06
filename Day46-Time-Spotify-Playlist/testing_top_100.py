@@ -2,9 +2,11 @@ from bs4 import BeautifulSoup
 import requests
 
 # input_date = input("Which date to use? Please enter a date in the format YYYY-MM-DD")
-input_date = "2022-11-19"
+input_date = "2022-1-19"
+
 
 response = requests.get(url=f"https://www.billboard.com/charts/hot-100/{input_date}")
+print(response.status_code)
 billboard_site = response.text
 
 soup = BeautifulSoup(billboard_site, "html.parser")
