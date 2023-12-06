@@ -66,9 +66,10 @@ def get_track_ids(songs_list) -> list:
         print(track_id)
         song_ids.append(track_id)
     return song_ids
-tracks = ['Anti-Hero', 'Rich Flex', 'Major Distribution', 'On BS', 'Spin Bout U', 'Pussy & Millions', 'Privileged Rappers', 'Circo Loco', 'BackOutsideBoyz', 'Unholy', 'Hours In Silence', 'Broke Boys', 'Bad Habit', 'Treacherous Twins', 'Middle Of The Ocean', 'Jumbotron Shit Poppin', 'As It Was', "More M's", "I Guess It's Fuck Me", "I'm Good (Blue)", 'Super Freaky Girl', 'Lift Me Up', 'Lavender Haze', 'I Like You (A Happier Song)', 'You Proof', 'Something In The Orange', '3AM On Glenwood', "I Ain't Worried", 'Vegas', 'Midnight Rain', 'Jimmy Cooks', 'Under The Influence', 'Bejeweled', 'Die For You', 'Sunroof', 'Maroon', 'Wasted On You', 'Cuff It', 'Karma', 'Snow On The Beach', 'Wait For U', "You're On Your Own, Kid", 'Titi Me Pregunto', 'Just Wanna Rock', 'The Kind Of Love We Make', 'Shirt', 'She Had Me At Heads Carolina', 'About Damn Time', 'Tomorrow 2', 'Unstoppable', 'Vigilante Shit', 'Thank God', 'Die For You', '5 Foot 9', 'Hold Me Closer', 'Question...?', 'Golden Hour', 'Rock And A Hard Place', 'Fall In Love', 'Half Of Me', 'Made You Look', 'Hotel Lobby (Unc And Phew)', 'What My World Spins Around', 'Until I Found You', 'Mastermind', "Victoria's Secret", 'Labyrinth', "Star Walkin' (League Of Legends Worlds Anthem)", 'Son Of A Sinner', "Don't Come Lookin'", 'Sweet Nothing', 'Romantic Homicide', 'California Breeze', 'Billie Eilish.', 'Wait In The Truck', "Would've, Could've, Should've", 'Heyy', 'Wishful Drinking', 'Free Mind', 'Music For A Sushi Restaurant', 'No Se Va', 'Whiskey On You', 'My Mind & Me', 'Forever', 'Bigger Than The Whole Sky', 'All Mine', 'The Great War', 'Calm Down', 'Miss You', 'Paris', 'Last Last', 'Freestyle', 'Pick Me Up', 'In My Head', 'Country On', 'La Bachata', '2 Be Loved (Am I Ready)', 'High Infidelity', 'Gotta Move On', 'Staying Alive']
+
+
 # get_track_ids(tracks)
-print(get_track_ids(tracks))
+# print(get_track_ids(tracks))
 
 def add_track(track_ids):
     # sp.user_playlist_add_tracks(user=user_id, playlist_id=date_playlist_id, )
