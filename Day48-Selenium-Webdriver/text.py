@@ -1,5 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+import time
 
 # keep Chrome open after the program finishes
 chrome_options = webdriver.ChromeOptions()
@@ -47,6 +49,15 @@ driver.get("https://en.wikipedia.org/wiki/Main_Page")
 # finding a link by link text
 # content_portals = driver.find_element(By.LINK_TEXT, value="Content portals")
 # content_portals.click()
+
+# wait 2 seconds for the page to fully load
+time.sleep(2)
+# typing into a search bar
+search = driver.find_element(By.NAME, value="search")
+# print(search.get_property("placeholder"))
+search.send_keys("Python")
+search.send_keys(Keys.ENTER)
+# search.click()
 
 # quit the entire driver
 # driver.quit()
