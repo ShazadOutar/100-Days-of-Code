@@ -86,26 +86,28 @@ def buy_upgrade(driver):
     # TODO: Try moving this to the main function and passing the store page as a input parameter instead
     # get the store items
     store_divs = driver.find_elements(By.CSS_SELECTOR, "#store div")
-    store_divs.pop()
+    # store_divs.pop()
+    item_ids = [div.get_attribute("id") for div in store_divs]
 
     balance = get_current_balance(driver)
     # loop through in reverse and try to buy the most expensive item
     for item in store_divs[::-1]:
         try:
-            print(item.text.strip().split("-"))
+            # print(item.text.strip().split("-"))
             cost = int(item.text.strip().split("-")[1].split("\n")[0].strip().replace(",", ""))
-            print(f"Cost is: {cost}")
+            # print(f"Cost is: {cost}")
             # balance = get_current_balance(driver)
-            print(f"Balance is: {balance}")
+            # print(f"Balance is: {balance}")
             if balance >= cost:
                 # then buy item
-                print(item)
-                print(cost)
+                # print(item)
+                # print(cost)
                 item.click()
         except IndexError:
-            print("in except")
-            print(item.text)
-            print("after")
+            # print("in except")
+            # print(item.text)
+            # print("after")
+            pass
 
 
 def main():
@@ -127,10 +129,14 @@ def main():
     ending_time = starting_time + 60*1
 
     # for i in range(50):
+    for i in range(100):
+        cookie.click()
+
     while ending_time > time.time():
         cookie.click()
-        get_current_balance(driver)
-        buy_upgrade(driver)
+        if round(time.time() - starting_time) % 5 == 0:
+            get_current_balance(driver)
+            buy_upgrade(driver)
 
     # get_current_balance(driver)
     # buy_upgrade(driver)
