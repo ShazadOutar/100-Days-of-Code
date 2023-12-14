@@ -1,4 +1,5 @@
 # auto-playing a cookie clicker game
+import time
 
 # from selenium import webdriver
 # from selenium.webdriver.common.by import By
@@ -82,6 +83,7 @@ def buy_upgrade(driver):
     #     price = i.text.strip().split()
     #     print(price[3])
 
+    # TODO: Try moving this to the main function and passing the store page as a input parameter instead
     # get the store items
     store_divs = driver.find_elements(By.CSS_SELECTOR, "#store div")
     store_divs.pop()
@@ -106,7 +108,6 @@ def buy_upgrade(driver):
             print("after")
 
 
-
 def main():
     print("Main")
     chrome_options = webdriver.ChromeOptions()
@@ -120,7 +121,13 @@ def main():
     # find the cookie to click on
     cookie = driver.find_element(By.ID, value="cookie")
     # cookie.click()
-    for i in range(20):
+
+    # run for 5 minutes
+    starting_time = time.time()
+    ending_time = starting_time + 60*1
+
+    # for i in range(50):
+    while ending_time > time.time():
         cookie.click()
         get_current_balance(driver)
         buy_upgrade(driver)
