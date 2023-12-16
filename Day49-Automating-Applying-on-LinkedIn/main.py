@@ -37,7 +37,10 @@ def main():
                    "?currentJobId=3706566866&geoId=102571732&keywords=python%20developer&"
                    "location=New%20York%2C%20New%20York%2C%20United%20States&"
                    "origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&refresh=true")
-   
+    # save the first job result
+    time.sleep(1)
+    save_button = driver.find_element(By.CLASS_NAME, value="jobs-save-button")
+    save_button.click()
 
 if __name__ == "__main__":
     main()
