@@ -1,0 +1,2 @@
+All you need to enter to run the code from the terminal is 
+venv/Scripts/python.exe main.py
