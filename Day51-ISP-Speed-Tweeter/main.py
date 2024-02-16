@@ -5,8 +5,8 @@ from selenium.webdriver.common.keys import Keys
 
 PROMISED_DOWN = 150
 PROMISED_UP = 10
-TWITTER_EMAIL = "t7903559@gmail.com"
-TWITTER_PASSWORD = "&z6NFS_3:Re)4^T"
+TWITTER_EMAIL = ""
+TWITTER_PASSWORD = ""
 
 
 class InternetSpeedTwitterBot:
