@@ -8,7 +8,9 @@ def main():
     listings = get_house_listings()
     for listing in listings:
         print(f"Link: {listing.link}\n Address: {listing.address}\n Price: {listing.price_per_month}\n")
+    # fill the forms with the collected listing data
     fill_forms(listings)
+
 
 if __name__ == "__main__":
     main()
