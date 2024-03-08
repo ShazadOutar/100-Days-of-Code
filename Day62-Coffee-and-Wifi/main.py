@@ -1,5 +1,5 @@
 import wtforms.validators
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
@@ -13,39 +13,26 @@ Bootstrap5(app)
 
 
 class CafeForm(FlaskForm):
-    coffee_rating = [('1', '🍵'), ('2', '🍵🍵'), ('3', '🍵🍵🍵'), ('4', '🍵🍵🍵🍵'), ('5', '🍵🍵🍵🍵🍵')]
-    wifi_rating = [('0', '✖️'), ('1', '🦾'), ('2', '🦾🦾'), ('3', '🦾🦾🦾'), ('4', '🦾🦾🦾🦾')]
-    power_rating = [('0', '✖️'), ('1', '🔌'), ('2', '🔌🔌'), ('3', '🔌🔌🔌'), ('4', '🔌🔌🔌🔌')]
-
     cafe = StringField('Cafe name', validators=[DataRequired()])
     location = StringField('Cafe Location on Google Maps (URL)',
                            validators=[DataRequired(), wtforms.validators.URL(message="Please enter a valid URL")])
     open = StringField('Open', validators=[DataRequired()])
     close = StringField('Close', validators=[DataRequired()])
-    coffee = SelectField('Coffee', validators=[DataRequired()], choices=coffee_rating)
-    wifi = SelectField('Wifi Strenght', validators=[DataRequired()], choices=wifi_rating)
-    power = SelectField('Power Socket Availability', validators=[DataRequired()], choices=power_rating)
+    coffee = SelectField('Coffee', validators=[DataRequired()],
+                         choices=["☕️", "☕☕", "☕☕☕", "☕☕☕☕", "☕☕☕☕☕"])
+    wifi = SelectField('Wifi Strenght', validators=[DataRequired()],
+                       choices=["✘", "💪", "💪💪", "💪💪💪", "💪💪💪💪", "💪💪💪💪💪"])
+    power = SelectField('Power Socket Availability', validators=[DataRequired()],
+                        choices=["✘", "🔌", "🔌🔌", "🔌🔌🔌", "🔌🔌🔌🔌", "🔌🔌🔌🔌🔌"])
     submit = SubmitField('Submit')
 
 
-def add_form_data(input_form_data_list):
+def add_form_data(cafe, location, cafe_open, close, coffee, wifi, power):
     # Use the data from the form to add to the csv file
+    new_csv_data = f"\n{cafe},{location},{cafe_open},{close},{coffee},{wifi},{power}"
+    print(new_csv_data)
     with open(file="cafe-data.csv", mode='a', encoding='utf-8') as file:
-        file.write('\n')
-        input_string = "\n"
-        for item in input_form_data_list:
-            # input_string + str(item)
-        file.write(input_form_data_list)
-
-
-
-# Exercise:
-# add: Location URL, open time, closing time, coffee rating, wifi rating, power outlet rating fields
-# make coffee/wifi/power a select element with choice of 0 to 5.
-# e.g. You could use emojis ☕️/💪/✘/🔌
-# make all fields required except submit
-# use a validator to check that the URL field has a URL entered.
-# ---------------------------------------------------------------------------
+        file.write(new_csv_data)
 
 
 # all Flask routes below
@@ -60,9 +47,9 @@ def add_cafe():
     if form.validate_on_submit():
         # if the form data passes the validators, add it to the csv file
         print("True")
-        form_data = [
-            form.cafe, form.location, form.open, form.close, form.coffee, form.wifi, form.power]
-        add_form_data(form_data)
+        add_form_data(form.cafe.data, form.location.data, form.open.data, form.close.data, form.coffee.data,
+                      form.wifi.data, form.power.data)
+        return redirect(url_for('cafes'))
 
     # Exercise:
     # Make the form write a new row into cafe-data.csv
