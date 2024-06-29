@@ -38,7 +38,7 @@ def home():
     result = db.session.execute(db.select(Book).order_by(Book.title))
     # put the result in all_books
     all_books = result.scalars().all()
-    print(all_books)
+    # print(all_books)
     return render_template("index.html", books=all_books)
 
 
@@ -67,7 +67,6 @@ def add():
 
 @app.route("/edit", methods=["GET", "POST"])
 def edit():
-    # TODO: Finish this part next
     if request.method == "POST":
         # Use the book id to find the book info in the db
         # book = book_id
@@ -81,6 +80,15 @@ def edit():
     book_id = request.args.get("id")
     book = db.get_or_404(Book, book_id)
     return render_template("edit.html", book=book)
+
+
+@app.route('/delete')
+def delete():
+    book_id = request.args.get("id")
+    book_to_delete = db.get_or_404(Book, book_id)
+    db.session.delete(book_to_delete)
+    db.session.commit()
+    return redirect(url_for('home'))
 
 
 if __name__ == "__main__":
