@@ -1,3 +1,4 @@
+import os
 import sqlite3
 
 from flask import Flask, render_template, redirect, url_for, request
@@ -9,6 +10,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, FloatField
 from wtforms.validators import DataRequired
 import requests
+
+MOVIE_API_KEY = os.environ["MOVIE_API_KEY"]
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
@@ -41,9 +44,9 @@ class Movie(db.Model):
     title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     year: Mapped[int] = mapped_column(Integer, nullable=False)
     description: Mapped[str] = mapped_column(String(250), nullable=False)
-    rating: Mapped[float] = mapped_column(Float, nullable=False)
-    ranking: Mapped[int] = mapped_column(Integer, nullable=False)
-    review: Mapped[str] = mapped_column(String(250), nullable=False)
+    rating: Mapped[float] = mapped_column(Float)
+    ranking: Mapped[int] = mapped_column(Integer)
+    review: Mapped[str] = mapped_column(String(250))
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
 
 
@@ -123,6 +126,108 @@ def delete():
     db.session.commit()
     return redirect(url_for('home'))
 
+
+class AddMovieForm(FlaskForm):
+    title = StringField(label="Movie Title:", validators=[
+        DataRequired(message="Please do not leave empty")
+    ])
+    submit = SubmitField(label="Add Movie")
+
+
+@app.route("/add", methods=["GET", "POST"])
+def add_movie():
+    form = AddMovieForm()
+    if request.method == "POST" and form.validate_on_submit():
+        # get the results of the search from the movie api
+        params = {
+            "query": form.title.data,
+            "include_adult": False,
+            "language": "en-US",
+            "api_key": MOVIE_API_KEY
+        }
+        print(params)
+        headers = {
+            "accept": "application/json",
+            # "Authorization": "Bearer " + MOVIE_API_KEY
+        }
+
+        # url = ("https://api.themoviedb.org/3/search/movie?"
+        #        "query=The%20Matrix&include_adult=false&language=en-US&page=1")
+        url = "https://api.themoviedb.org/3/search/movie"
+        response = requests.get(url, headers=headers, params=params)
+        # print(response)
+        # print(response.text)
+        # print(response.json())
+        movies_search_results_json = response.json()["results"]
+        print(movies_search_results_json)
+        return render_template('select.html', movies=movies_search_results_json)
+
+    return render_template("add.html", form=form)
+
+
+def get_movie_details(movie_id):
+    url = f"https://api.themoviedb.org/3/movie/{movie_id}"
+    params = {
+        # "movie_id": movie_id,
+        "language": "en-US",
+        "api_key": MOVIE_API_KEY,
+    }
+    headers = {
+        "accept": "application/json",
+    }
+    response = requests.get(url, params=params, headers=headers)
+    print(response.json())
+    response_json = response.json()
+    title = response_json["original_title"]
+    print(title)
+    # title = response.json()["original_title"]
+    # print(title)
+    # movie_data = {
+    #     "title": response_json["original_title"],
+    #     "img_url": response_json["poster_path"],
+    #     "year": response_json["release_date"],
+    #     "description": response_json["overview"]
+    # }
+
+    # Add this to get the images to work
+    base_url = "https://api.themoviedb.org/3/configuration"
+    params = {
+        "api_key": MOVIE_API_KEY
+    }
+    headers = {
+        "accept": "application/json",
+    }
+
+    img_response = requests.get(base_url, headers=headers, params=params)
+    print(img_response.json()["images"])
+    img_url = f'{img_response.json()["images"]["base_url"]}/w500/{response_json["poster_path"]}'
+
+    movie_data = Movie(
+        title=response_json["original_title"],
+        # img_url=response_json["poster_path"],
+        img_url=img_url,
+        year=response_json["release_date"],
+        description=response_json["overview"],
+        rating=0,
+        ranking=0,
+        review=""
+    )
+    print(movie_data)
+    return movie_data
+
+
+@app.route('/find')
+def find():
+    # search the movie name up to get its ID
+    movie_id = request.args.get("movie_id")
+    print(movie_id)
+    # Get the details of that movie from the API
+    # new_movie = get_movie_details(movie_id)
+    with app.app_context():
+        new_movie = get_movie_details(movie_id)
+        db.session.add(new_movie)
+        db.session.commit()
+    return redirect(url_for('home'))
 
 
 if __name__ == '__main__':
