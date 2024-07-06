@@ -44,9 +44,9 @@ class Movie(db.Model):
     title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     year: Mapped[int] = mapped_column(Integer, nullable=False)
     description: Mapped[str] = mapped_column(String(250), nullable=False)
-    rating: Mapped[float] = mapped_column(Float)
-    ranking: Mapped[int] = mapped_column(Integer)
-    review: Mapped[str] = mapped_column(String(250))
+    rating: Mapped[float] = mapped_column(Float, nullable=False)
+    ranking: Mapped[int] = mapped_column(Integer, nullable=False)
+    review: Mapped[str] = mapped_column(String(250), nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
 
 
@@ -82,10 +82,21 @@ with app.app_context():
 
 @app.route("/")
 def home():
-    # get all the movies and sort them by rank
-    all_movies_query = db.session.execute(db.select(Movie).order_by(Movie.ranking))
+    # get all the movies and sort them by rating
+    all_movies_query = db.session.execute(db.select(Movie).order_by(Movie.rating))
     all_movies_list = all_movies_query.scalars().all()
-    return render_template("index.html", movies=all_movies_list)
+    # for movie in all_movies_list:
+    #     print(movie.title)
+    #     print(movie.ranking)
+    #     print(movie.id)
+    # ranking_list = []
+    # for movie in all_movies_list:
+
+    for index in range(len(all_movies_list)):
+        all_movies_list[index].ranking = len(all_movies_list) - index
+        # all_movies_list[index].ranking = 0
+    db.session.commit()
+    return render_template("index.html", movies=all_movies_list[::-1])
 
 
 class EditForm(FlaskForm):
@@ -114,8 +125,8 @@ def edit():
         movie_to_update.rating = rating
         db.session.commit()
         return redirect(url_for('home'))
-
-    return render_template("edit.html", form=form, id=movie_id)
+    movie_title = db.get_or_404(Movie, movie_id).title
+    return render_template("edit.html", form=form, id=movie_id, title=movie_title)
 
 
 @app.route("/delete", methods=["GET"])
@@ -206,7 +217,7 @@ def get_movie_details(movie_id):
         title=response_json["original_title"],
         # img_url=response_json["poster_path"],
         img_url=img_url,
-        year=response_json["release_date"],
+        year=response_json["release_date"].split("-")[0],
         description=response_json["overview"],
         rating=0,
         ranking=0,
@@ -226,8 +237,16 @@ def find():
     with app.app_context():
         new_movie = get_movie_details(movie_id)
         db.session.add(new_movie)
+        # print(new_movie.id)
         db.session.commit()
-    return redirect(url_for('home'))
+        # After the movie is added to the db, pass its id to the edit page
+        print(new_movie.id)
+        new_movie_db_id = new_movie.id
+    # return redirect(url_for('home'))
+    # with app.app_context():
+        # new_movie_db_id = db.session.execute()
+
+    return redirect(url_for('edit', id=new_movie_db_id))
 
 
 if __name__ == '__main__':
