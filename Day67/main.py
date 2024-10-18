@@ -11,6 +11,8 @@ from wtforms.validators import DataRequired, URL
 from flask_ckeditor import CKEditor, CKEditorField
 from datetime import date
 
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 ckeditor = CKEditor(app)
@@ -38,10 +40,11 @@ class BlogPost(db.Model):
 class BlogForm(FlaskForm):
     title = StringField('Title')
     subtitle = StringField('Subtitle')
-    date = DateField('Date')
-    body = CKEditorField('Body')
+    # date = DateField('Date')
     author = StringField('Author')
-    img_url = URLField('Map URL')
+    img_url = URLField('Background Image URL')
+    body = CKEditorField('Body')
+    submit = SubmitField('Submit')
 
 with app.app_context():
     db.create_all()
@@ -66,7 +69,6 @@ def show_post(post_id):
     # print(post_id)
     requested_post = db.session.get(BlogPost, post_id)
     if requested_post:
-        print(requested_post)
         return render_template("post.html", post=requested_post)
     else:
         return "<h1>Page Not Found<h1>"
@@ -75,9 +77,18 @@ def show_post(post_id):
 @app.route("/new-post", methods=["GET", "POST"])
 def create_new_post():
     form = BlogForm()
-    if request.method == 'POST':
-        data = request.form.get('ckeditor')
-        return f"{data}"
+    if form.validate_on_submit():
+        new_blog = BlogPost(
+            title = form.title.data,
+            subtitle = form.subtitle.data,
+            date = date.strftime(date.today(), "%m/%d/%Y"),
+            body = form.body.data,
+            author = form.author.data,
+            img_url = form.img_url.data,
+        )
+        db.session.add(new_blog)
+        db.session.commit()
+        return redirect(url_for('get_all_posts'))
     return render_template("make-post.html", form=form)
 # TODO: edit_post() to change an existing blog post
 
