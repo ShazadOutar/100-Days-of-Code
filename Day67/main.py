@@ -39,7 +39,7 @@ db.init_app(app)
 class BlogForm(FlaskForm):
     title = StringField("Title", [validators.DataRequired()])
     subtitle = StringField("Subtitle", [validators.DataRequired()])
-    author_name = StringField("Name", [validators.DataRequired()])
+    author_name = StringField("Your Name", [validators.DataRequired()])
     img_url = URLField("Image URL", [validators.DataRequired()])
     content = CKEditorField("Blog Content", [validators.DataRequired()])
     submit = SubmitField("Submit Post")
@@ -105,8 +105,36 @@ def add_new_post():
 
 
 # TODO: edit_post() to change an existing blog post
+@app.route("/edit-post/<post_id>", methods=["GET", "POST"])
+def edit_post(post_id):
+    # blog_data = db.session.get(BlogPost, post_id)
+    blog_data = db.get_or_404(BlogPost, post_id)
+    blog_form = BlogForm(
+        title = blog_data.title,
+        subtitle = blog_data.subtitle,
+        author_name = blog_data.author,
+        img_url = blog_data.img_url,
+        content = blog_data.body
+    )
+    if blog_form.validate_on_submit():
+        blog_data.title = blog_form.title.data
+        blog_data.subtitle = blog_form.subtitle.data
+        blog_data.date = blog_data.date
+        blog_data.body = blog_form.content.data
+        blog_data.author = blog_form.author_name.data
+        blog_data.img_url = blog_form.img_url.data
+        db.session.commit()
+
+        return redirect(url_for('get_all_posts'))
+    return render_template("make-post.html", form=blog_form, is_edit=True)
+
 
 # TODO: delete_post() to remove a blog post from the database
+@app.route("/delete/<post_id>")
+def delete_post(post_id):
+    db.session.query(BlogPost).filter(BlogPost.id == post_id).delete()
+    db.session.commit()
+    return redirect(url_for('get_all_posts'))
 
 # Below is the code from previous lessons. No changes needed.
 @app.route("/about")
