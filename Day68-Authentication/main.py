@@ -45,7 +45,12 @@ def register():
         form_data = request.form
         name = form_data.get("name")
         email = form_data.get("email")
-        password = form_data.get("password")
+        input_password = form_data.get("password")
+        password = generate_password_hash(
+            password=input_password,
+            method='pbkdf2:sha256',
+            salt_length=8)
+        print(password)
         new_user = User(
             email=email,
             name=name,
