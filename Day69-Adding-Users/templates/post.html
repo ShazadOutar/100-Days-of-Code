@@ -18,7 +18,7 @@
     </div>
   </div>
 </header>
-
+{% from "bootstrap5/form.html" import render_form %}
 <!-- Post Content -->
 <article>
   <div class="container px-4 px-lg-5">
@@ -35,7 +35,12 @@
           </div>
         {% endif %}
         <!-- Comments Area -->
-        <!-- TODO: Add a CKEditor for commenting below -->
+        <!-- Load the CKEditor-->
+        {{ ckeditor.load() }}
+        <!-- Configure the CKEditor-->
+        {{ ckeditor.config(name='comment_text') }}
+        <!-- Create the form -->
+        {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
         <div class="comment">
           <!-- TODO: Show all the comments on a post -->
           <ul class="commentList">

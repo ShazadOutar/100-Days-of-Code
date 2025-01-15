@@ -13,7 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms.validators import email
 
 # Import your forms from the forms.py
-from forms import CreatePostForm, RegisterForm, LoginForm
+from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
@@ -168,7 +168,9 @@ def get_all_posts():
 @app.route("/post/<int:post_id>")
 def show_post(post_id):
     requested_post = db.get_or_404(BlogPost, post_id)
-    return render_template("post.html", post=requested_post)
+    # add the comment form
+    comment_form = CommentForm()
+    return render_template("post.html", post=requested_post, form=comment_form)
 
 
 @app.route("/new-post", methods=["GET", "POST"])
